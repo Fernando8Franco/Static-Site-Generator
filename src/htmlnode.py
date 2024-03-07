@@ -5,11 +5,20 @@ class HTMLNode:
         self.children = children
         self.props = props
 
+    def __eq__(self, o):
+        if not isinstance(o, HTMLNode):
+            return False
+        
+        return(self.tag == o.tag and
+               self.value == o.value and
+               self.children == o.children and
+               self.props == o.props)
+
     def to_html(self):
         raise NotImplementedError
 
     def props_to_html(self):
-        if (not self.props):
+        if not self.props:
             return ""
 
         porps_to_html = ""
@@ -27,10 +36,10 @@ class LeafNode(HTMLNode):
         super().__init__(tag, value, props=props)
 
     def to_html(self):
-        if (not self.value):
+        if self.value is None:
             raise ValueError("HTML Error: No value given")
         
-        if (not self.tag):
+        if not self.tag:
             return self.value
         
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
@@ -40,10 +49,10 @@ class ParentNode(HTMLNode):
         super().__init__(tag, children=children, props=props)
 
     def to_html(self):
-        if (not self.tag):
+        if not self.tag:
             raise ValueError("HTML Error: No tag given")
 
-        if (not self.children):
+        if not self.children:
             raise ValueError("HTML Error: No children given")
         
         html = ""
