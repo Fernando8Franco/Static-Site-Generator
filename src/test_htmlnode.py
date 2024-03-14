@@ -102,5 +102,12 @@ class TestHTMLNode(unittest.TestCase):
                 )
         self.assertEqual(node.to_html(), "<p><b>Bold</b>Normal<p><i>Italic</i><h1>Normal</h1></p></p>")
 
+    def test_parentnode_to_html(self):
+        node = ParentNode(
+                    "p",
+                    [LeafNode("b", "Bold text")],
+                )
+        self.assertEqual(node.to_html(), "<p><b>Bold text</b></p>")
+
 if __name__ == "__main__":
     unittest.main()

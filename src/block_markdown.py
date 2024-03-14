@@ -1,13 +1,16 @@
 import re
-from textnode import (block_type_paragraph,
-                      block_type_heading,
-                      block_type_code,
-                      block_type_quote,
-                      block_type_unordered_list,
-                      block_type_ordered_list)
+from textnode import text_node_to_html_node
+from inline_markdown import text_to_textnodes
 
-def markdown_to_blocks(text):
-    blocks = text.split("\n\n")
+block_type_paragraph = "paragraph"
+block_type_heading = "heading"
+block_type_code = "code"
+block_type_quote = "quote"
+block_type_unordered_list = "unordered_list"
+block_type_ordered_list = "ordered_list"
+
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
     filtered_blocks = []
 
     for block in blocks:

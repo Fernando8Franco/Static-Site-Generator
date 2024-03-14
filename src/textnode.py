@@ -7,13 +7,6 @@ text_type_code = "code"
 text_type_link = "link"
 text_type_image = "image"
 
-block_type_paragraph = "paragraph"
-block_type_heading = "heading"
-block_type_code = "code"
-block_type_quote = "quote"
-block_type_unordered_list = "unordered_list"
-block_type_ordered_list = "ordered_list"
-
 class TextNode:
     def __init__(self, text=None, text_type=None, url=None):
         self.text = text
@@ -31,18 +24,18 @@ class TextNode:
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
     
-def text_node_to_html_node(tex_node):
-    if tex_node.text_type == text_type_text:
-        return LeafNode(None, tex_node.text)
-    if tex_node.text_type == text_type_bold:
-        return LeafNode('b', tex_node.text)
-    if tex_node.text_type == text_type_italic:
-        return LeafNode('i', tex_node.text)
-    if tex_node.text_type == text_type_code:
-        return LeafNode('code', tex_node.text)
-    if tex_node.text_type == text_type_link:
-        return LeafNode('a', tex_node.text, {"href": tex_node.url})
-    if tex_node.text_type == text_type_image:
-        return LeafNode('img', '', {"src": tex_node.url, "alt": tex_node.text})
+def text_node_to_html_node(text_node):
+    if text_node.text_type == text_type_text:
+        return LeafNode(None, text_node.text)
+    if text_node.text_type == text_type_bold:
+        return LeafNode('b', text_node.text)
+    if text_node.text_type == text_type_italic:
+        return LeafNode('i', text_node.text)
+    if text_node.text_type == text_type_code:
+        return LeafNode('code', text_node.text)
+    if text_node.text_type == text_type_link:
+        return LeafNode('a', text_node.text, {"href": text_node.url})
+    if text_node.text_type == text_type_image:
+        return LeafNode('img', '', {"src": text_node.url, "alt": text_node.text})
     
-    raise Exception(f"Invalid text type: {tex_node.text_type}")         
+    raise Exception(f"Invalid text type: {text_node.text_type}")         
