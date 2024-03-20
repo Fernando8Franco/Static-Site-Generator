@@ -2,12 +2,15 @@ import unittest
 
 from block_markdown import (markdown_to_blocks,
                             block_to_block_type,
+                            markdown_to_html_node,
                             block_type_paragraph,
                             block_type_heading,
                             block_type_code,
                             block_type_quote,
                             block_type_unordered_list,
                             block_type_ordered_list)
+
+from htmlnode import ParentNode, LeafNode
 
 class TestBlockMarkdown(unittest.TestCase):
     #####
@@ -121,6 +124,41 @@ This is the same paragraph on a new line
             with self.subTest(input_text=input_text, expected_type=expected_type):
                 type = block_to_block_type(input_text)
                 self.assertEqual(type, expected_type)
+
+    #####
+    # TEST MARKDOWN TO HTML NODE
+    #####
+    def test_block_to_html_node(self):
+        text = """
+This is **bolded** paragraph
+"""
+
+        node = markdown_to_html_node(text)
+        html = node.to_html()
+
+        self.assertEqual(
+            html,
+            '<div><p>This is <b>bolded</b> paragraph</p></div>'
+        )
+
+    def test_block_to_html_node1(self):
+        text = """
+- This is a list
+- with items
+- and *more* items
+
+1. This is an `ordered` list
+2. with items
+3. and more items
+"""
+
+        node = markdown_to_html_node(text)
+        html = node.to_html()
+
+        self.assertEqual(
+            html,
+            '<div><ul><li>This is a list</li><li>with items</li><li>and <i>more</i> items</li></ul><ol><li>This is an <code>ordered</code> list</li><li>with items</li><li>and more items</li></ol></div>'
+        )
 
 if __name__ == "__main__":
     unittest.main()

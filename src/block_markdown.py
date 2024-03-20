@@ -74,64 +74,72 @@ def text_to_html_node(text):
     return leaf_nodes
 
 def markdown_to_html_node(markdown):
+    children = []
     markdown_blocks = markdown_to_blocks(markdown)
 
     for block in markdown_blocks:
-        if block_to_block_type(block) == block_type_paragraph:
-            lines = block.splitlines()
-            paragraph = " ".join(lines)
+        children.append(block_to_html_node(block))
 
-            html_nodes = text_to_html_node(paragraph)
-            
-            return ParentNode('p', html_nodes)
+    return ParentNode('div', children)
+    
 
-        if block_to_block_type(block) == block_type_heading:
-            if '\n' in block:
-                raise Exception("Invalid Markdow Sytax: Headers must be separated")
-            
-            start = None
-            for i in range(1, 7):
-                if block.startswith("#"*i+" "):
-                    level = i
-                    break
+def block_to_html_node(block):
+    
+    if block_to_block_type(block) == block_type_paragraph:
+        lines = block.splitlines()
+        paragraph = " ".join(lines)
 
-            if not start:
-                raise ValueError('ValueError: Not valid header')
-
-            html_nodes = text_to_html_node(block[level + 1:])
-
-            return ParentNode(f"h{level}", html_nodes)
-
-        if block_to_block_type(block) == block_type_code:
-            html_nodes = text_to_html_node(block[3:-3])
-            code = ParentNode('code', html_nodes)
-
-            return ParentNode('pre', code)
-
-        if block_to_block_type(block) == block_type_quote:
-            lines = block.splitlines()
-            paragraph = " ".join(block.replace(">", "").splitlines())
-
-            html_nodes = text_to_html_node(paragraph)
-
-            return ParentNode('blockquote', html_nodes)
-
-        if block_to_block_type(block) == block_type_unordered_list:
-            lines = block.splitlines()
-            ul_nodes = []
-
-            for line in lines:
-                html_nodes = text_to_html_node(line[2:])
-                ul_nodes.append(ParentNode("li", html_nodes))
-
-            return ParentNode("ul", ul_nodes)
+        html_nodes = text_to_html_node(paragraph)
         
-        if block_to_block_type(block) == block_type_ordered_list:
-            lines = block.splitlines()
-            ol_nodes = []
+        return ParentNode('p', html_nodes)
 
-            for line in lines:
-                html_nodes = text_to_html_node(line[2:])
-                ol_nodes.append(ParentNode("li", html_nodes))
+    if block_to_block_type(block) == block_type_heading:
+        if '\n' in block:
+            raise Exception("Invalid Markdow Sytax: Headers must be separated")
+        
+        start = None
+        for i in range(1, 7):
+            if block.startswith("#"*i+" "):
+                level = i
+                break
 
-            return ParentNode("ol", ol_nodes)
+        if not start:
+            raise ValueError('ValueError: Not valid header')
+
+        html_nodes = text_to_html_node(block[level + 1:])
+
+        return ParentNode(f"h{level}", html_nodes)
+
+    if block_to_block_type(block) == block_type_code:
+        html_nodes = text_to_html_node(block[3:-3])
+        code = ParentNode('code', html_nodes)
+
+        return ParentNode('pre', code)
+
+    if block_to_block_type(block) == block_type_quote:
+        lines = block.splitlines()
+        paragraph = " ".join(block.replace(">", "").splitlines())
+
+        html_nodes = text_to_html_node(paragraph)
+
+        return ParentNode('blockquote', html_nodes)
+
+    if block_to_block_type(block) == block_type_unordered_list:
+        lines = block.splitlines()
+        ul_nodes = []
+
+        for line in lines:
+            html_nodes = text_to_html_node(line[2:])
+            ul_nodes.append(ParentNode("li", html_nodes))
+
+        return ParentNode("ul", ul_nodes)
+    
+    if block_to_block_type(block) == block_type_ordered_list:
+        lines = block.splitlines()
+        ol_nodes = []
+
+        for line in lines:
+            html_nodes = text_to_html_node(line[3:])
+            ol_nodes.append(ParentNode("li", html_nodes))
+
+        return ParentNode("ol", ol_nodes)
