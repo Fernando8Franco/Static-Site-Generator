@@ -141,7 +141,7 @@ This is **bolded** paragraph
             '<div><p>This is <b>bolded</b> paragraph</p></div>'
         )
 
-    def test_block_to_html_node1(self):
+    def test_block_to_html_node(self):
         text = """
 - This is a list
 - with items
@@ -158,6 +158,52 @@ This is **bolded** paragraph
         self.assertEqual(
             html,
             '<div><ul><li>This is a list</li><li>with items</li><li>and <i>more</i> items</li></ul><ol><li>This is an <code>ordered</code> list</li><li>with items</li><li>and more items</li></ol></div>'
+        )
+
+    def test_block_to_html_node1(self):
+        text = """
+# Header1
+
+## Header2
+
+paragraph
+
+```
+code
+code
+```
+
+>Quote
+>Quote
+
+* list
+* *list*
+
+1. o list
+"""
+
+        node = markdown_to_html_node(text)
+        html = node.to_html()
+
+        self.assertEqual(
+            html,
+            """<div><h1>Header1</h1><h2>Header2</h2><p>paragraph</p><pre><code>
+code
+code
+</code></pre><blockquote>Quote Quote</blockquote><ul><li>list</li><li><i>list</i></li></ul><ol><li>o list</li></ol></div>"""
+        )
+
+    def test_block_to_html_node(self):
+        text = """
+####### Header
+"""
+
+        node = markdown_to_html_node(text)
+        html = node.to_html()
+
+        self.assertEqual(
+            html,
+            '<div><p>####### Header</p></div>'
         )
 
 if __name__ == "__main__":

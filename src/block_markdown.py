@@ -94,17 +94,11 @@ def block_to_html_node(block):
         return ParentNode('p', html_nodes)
 
     if block_to_block_type(block) == block_type_heading:
-        if '\n' in block:
-            raise Exception("Invalid Markdow Sytax: Headers must be separated")
-        
-        start = None
+        level = None
         for i in range(1, 7):
             if block.startswith("#"*i+" "):
                 level = i
                 break
-
-        if not start:
-            raise ValueError('ValueError: Not valid header')
 
         html_nodes = text_to_html_node(block[level + 1:])
 
@@ -114,7 +108,7 @@ def block_to_html_node(block):
         html_nodes = text_to_html_node(block[3:-3])
         code = ParentNode('code', html_nodes)
 
-        return ParentNode('pre', code)
+        return ParentNode('pre', [code])
 
     if block_to_block_type(block) == block_type_quote:
         lines = block.splitlines()
