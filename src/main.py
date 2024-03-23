@@ -1,4 +1,3 @@
-from textnode import TextNode
+from copy_static import copy_static_files
 
-mynode = TextNode("xd", "xd1", "xd2")
-print(mynode)
+copy_static_files()
